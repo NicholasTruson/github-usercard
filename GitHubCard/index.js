@@ -24,7 +24,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+// const followersArray = []; //
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +53,88 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+
+// *** My Code *** //
+
+// Axios Get - Console Log - UserInfo //
+
+axios.get('https://api.github.com/users/nicholastruson')
+  .then (data => {
+    console.log('data: ', data)
+    const myInfo = data.data;
+    console.log('UserInfo: ', myInfo)
+
+    const cards = document.querySelector('.cards');
+    const cardInfo = cardCreator(myInfo)
+    cards.appendChild(cardInfo)
+  console.log(cards);
+
+  })
+
+// Followers Array //
+
+const followersArray = [
+  'jaredkain',
+  'DerekEtman',
+  'rleslie1015',
+  'mchrupcala',
+  'JaxAtwood',
+];
+
+followersArray.forEach(user => {
+  axios.get(`https://api.github.com/users/${user}`)
+    .then (data => {
+      const card = cardCreator(data.data)
+      const cards = document.querySelector('.cards')
+      cards.appendChild(card)
+    })
+})
+
+// Card Function & Component //
+
+function cardCreator(deets) {
+
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  name.classList.add('name')
+  userName.classList.add('userName')
+
+  card.appendChild(img)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(name)
+  cardInfo.appendChild(userName)
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  cardInfo.appendChild(profileLink)
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+
+  img.src = deets.avatar_url
+  location.textContent = deets.location
+  name.textContent = deets.name
+  userName.textContent = deets.login
+  const theProfileLink = deets.url
+  profileLink.innerHTML = theProfileLink.link(deets.url)
+  followers.textContent = `Followers: ${deets.followers}`
+  following.textContent = `Following: ${deets.following}`
+  bio.textContent = deets.bio
+
+  return card
+
+}
+
+//
